@@ -1983,4 +1983,9 @@ async def get_futures_snapshot(
 
 def run(transport: Literal["stdio", "sse", "streamable-http"] = "stdio") -> None:
     """Run the Massive MCP server."""
-    poly_mcp.run(transport)
+    if transport in ("sse", "streamable-http"):
+        host = os.environ.get("HOST", "0.0.0.0")
+        port = int(os.environ.get("PORT", "8000"))
+        poly_mcp.run(transport, host=host, port=port)
+    else:
+        poly_mcp.run(transport)
